@@ -8,7 +8,7 @@ Pre-requisites: You must have already set a LoRa network using a Conduit Gateway
 
 * [MultiTech mDot](http://www.multitech.com/models/94557148LF)
 * [An Arduino BOARD](https://www.arduino.cc/en/Main/ArduinoBoardUno)
-* [ArduiniMdot library by Ubidtos](https://github.com/ubidots/ubidots-arduino-mdot)
+* [Arduino mDot library by Ubidots](https://github.com/ubidots/ubidots-arduino-mdot)
 
 **IMPORTANT UPDATE NOTE:** Since version 2.0, the library will not make use of the Software Serial library due to multiple bugs found when trying to use it, because of this, the user **will not be able to make any debug**. We strongly advise to our users to use this library as reference for faster deployments but to develop their own firmware routine that fits their need once they think to go out to the market.
 
@@ -30,7 +30,7 @@ Pre-requisites: You must have already set a LoRa network using a Conduit Gateway
 
 For more information about the PinOut of the mDot device, please refer [here](https://os.mbed.com/platforms/MTS-mDot-F411/#mdot-pinout-diagram).
 
-2. Download the Ubidots ArduinoMdot library [here](https://github.com/ubidots/ubidots-arduino-mdot)
+2. Download the Ubidots ArduinoMdot library [here](https://github.com/ubidots/ubidots-arduino-mdot/archive/master.zip)
 3. Now, click on **Sketch -> Include Library -> Add .ZIP Library**
 4. Select the .ZIP file of ArduinoMdot and then "Accept" or "Choose"
 5. Close the Arduino IDE and open it again.
