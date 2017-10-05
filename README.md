@@ -101,10 +101,10 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  float value-1 = 1;
-  float value-2 = 25.234;
-  client.add(value-1);
-  client.add(value-2, 4, 2);  // char size is four, accuracy is 2 decimals
+  float value_1 = 1;
+  float value_2 = 25.234;
+  client.add(value_1);
+  client.add(value_2, 4, 2);  // char size is four, accuracy is 2 decimals
   client.sendAll();
   delay(5000);
 }
