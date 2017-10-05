@@ -69,29 +69,43 @@ bool Ubidots::sendAll()
 
 ## Send one value to Ubidots
 
-To send one value to Ubidots API you need to open the Arduino IDE and paste the next code, don't forget to change the Network name, password and sub band.
+This example is intended for sending two values to the conduit Gateway, don't forget to change the Network name, password and also sub band if you set a value different to one inside the gateway.
 
 <aside class="warning">
-Be careful if the firmware of your mDot isn't compatible with firmware of your MultiConnect Conduit, the mDot won't connect to your Conduit LoRa Network.
+Be careful if the firmware of your mDot isn't compatible with firmware of your MultiConnect Conduit Gateway, if it is different the mDot won't connect to your Conduit LoRa Network.
 </aside>
 
 ```c++
-#include "ArduinoMdot.h"
+/****************************************
+ * Include Libraries
+ ****************************************/
+#include <ubidotsMdot.h>
 
-#define SSID "Conduit_LoRa_Network_Name"
-#define PASS "Conduit_LoRa_Network_Password"
-#define SUB_BAND "1" // Number of your sub band of LoRa 1-8
-#define VARIABLE_NAME 1  // Depends of the number it'll be send a setted name
+/****************************************
+ * Define Constants
+ ****************************************/
+char const * SSID_NAME = "...."; // Put here your LoRa SSID
+char const * SSID_PASS = "...."; // Put here your LoRa Network password
 
-Ubidots client;
+Ubidots client(SSID_NAME, SSID_PASS);
+
+/****************************************
+ * Main Functions
+ ****************************************/
+
 void setup() {
+  // put your setup code here, to run once:
   Serial.begin(115200);
 }
 
 void loop() {
-  float value = analogRead(A0);
-  client.loraVerify(SSID, PASS, SUB_BAND);
-  client.loraSend(2.1230, VARIABLE_NAME);
+  // put your main code here, to run repeatedly:
+  float value-1 = 1;
+  float value-2 = 25.234;
+  client.add(value-1);
+  client.add(value-2, 4, 2);  // char size is four, accuracy is 2 decimals
+  client.sendAll();
+  delay(5000);
 }
 ```
 
