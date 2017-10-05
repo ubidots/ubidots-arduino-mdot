@@ -2,9 +2,7 @@
 
 LoRa is a modulation technique with a significantly long range. The modulation is based on spread-spectrum techniques and a variation of chirp spread spectrum (CSS) with integrated forward error correction (FEC). Mdot is a node to connect an IoT project with a LoRa network.
 
-<aside class="notice">
-Pre-requisites: You must have already set a LoRa network using a Conduit Gateway, for more information please refer to this tutorial [here](http://help.ubidots.com/connect-your-devices/multiconnect-conduit-lora-to-gprs-gateway)
-</aside>
+Pre-requisites: You must have already set a LoRa network using a Conduit Gateway, for more information please refer to this tutorial [here](http://help.ubidots.com/connect-your-devices/multiconnect-conduit-lora-to-gprs-gateway).
 
 ## Requiremets
 
