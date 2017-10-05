@@ -16,7 +16,7 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-Made by Mateo Velez - Jose Garcia for Ubidots Inc
+Made by Jose Garcia for Ubidots Inc
 
 Maintainers: Jose Garcia <jose.garcia@ubidots.com>
              Maria Hernandez <maria@ubidots.com>
@@ -46,7 +46,7 @@ Maintainers: Jose Garcia <jose.garcia@ubidots.com>
 #endif
 
 typedef struct Value {
-  char varValue[11];
+  char varValue[PACKETSIZE];
 } Value;
 
 class Ubidots {
@@ -58,7 +58,7 @@ class Ubidots {
     Ubidots(const char * ssid, const char * pass, uint8_t band = 1);
 
  private:
-    bool readGateway(int delay_gateway = 100);
+    bool readGateway(int delay_gateway = 200);
     char* populatePacket();
     bool checkConnection();
 

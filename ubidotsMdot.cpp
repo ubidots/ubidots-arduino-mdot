@@ -88,14 +88,8 @@ bool Ubidots::loraConnect(uint8_t band) {
 
 void Ubidots::add(float value, uint8_t length, uint8_t accuracy) {
     _currentValue++;
-    if (accuracy < 1){
-        accuracy = 1;
-    }
-    if (length - accuracy > 2){
-        accuracy = length - accuracy;  // length must have 2 bytes more than accuracy
-    }
-
     dtostrf(value, length, accuracy, (_val + _currentValue)->varValue);
+    Serial.println((_val + _currentValue)->varValue);
 }
 
 /**
@@ -128,6 +122,8 @@ char* Ubidots::populatePacket() {
 bool Ubidots::sendAll(){
     bool connected = checkConnection();
     char* packet = populatePacket();
+    Serial.print("packet build: ");
+    Serial.println(packet);
     if (strstr(packet, "ERROR") != NULL || strlen(packet) > PACKETSIZE){
         return false;  // Could not populate the array or max bytes size exceed
     }
@@ -153,7 +149,6 @@ bool Ubidots::sendAll(){
         return false;
     }
 
-    //free(_gatewayAnswer);
     Serial1.flush();
     delay(100);
     return true;
@@ -177,14 +172,13 @@ bool Ubidots::readGateway(int delay_gateway){
             }
         }
         _index = 0;
-        Serial.println("answer: ");
-        Serial.println(_gatewayAnswer);
 
         if (strstr(_gatewayAnswer, "ERROR") != NULL){
             result = false;
         }
         delay(delay_gateway);
     }
+    free(_gatewayAnswer);
     return result;
 }
 
@@ -205,8 +199,8 @@ bool Ubidots::checkConnection(){
         }
     }
     _index = 0;
-    /*Serial.println("answer: ");
-    Serial.println(_gatewayAnswer);*/
+    Serial.println("answer: ");
+    Serial.println(_gatewayAnswer);
 
     if (strstr(_gatewayAnswer, "0") != NULL){
         free(_gatewayAnswer);
