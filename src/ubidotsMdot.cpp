@@ -42,37 +42,37 @@ Ubidots::Ubidots(const char * ssid, const char * pass, uint8_t band) {
 
 bool Ubidots::loraConnect(uint8_t band) {
     // Checks if AT commands are available
-    Serial1.print("AT\r\n");
+    Serial.print("AT\r\n");
     if(!readGateway()){
         return false;
     }
 
     // Sets the ssid
-    Serial1.print("AT+NI=1,");
-    Serial1.print(_ssid);
-    Serial1.print("\r\n");
+    Serial.print("AT+NI=1,");
+    Serial.print(_ssid);
+    Serial.print("\r\n");
     if(!readGateway()){
         return false;
     }
 
     // Sets the passphrase to connect
-    Serial1.print("AT+NK=1,");
-    Serial1.print(_pass);
-    Serial1.print("\r\n");
+    Serial.print("AT+NK=1,");
+    Serial.print(_pass);
+    Serial.print("\r\n");
     if(!readGateway()){
         return false;
     }
 
     // Sets the band number
-    Serial1.print("AT+FSB=");
-    Serial1.print(band);
-    Serial1.print("\r\n");
+    Serial.print("AT+FSB=");
+    Serial.print(band);
+    Serial.print("\r\n");
     if(!readGateway()){
         return false;
     }
 
     // Attempts JOIN
-    Serial1.print("AT+JOIN\r\n");
+    Serial.print("AT+JOIN\r\n");
     delay(5000);
     if(!readGateway()){
         return false;
@@ -139,17 +139,15 @@ bool Ubidots::sendAll(){
         return false;  // The device is not connected
     }
 
-    Serial.println("sending values as: ");
-    Serial.println(packet);
-    Serial1.print("AT+SEND=");
-    Serial1.print(packet);
-    Serial1.print("\r\n");
+    Serial.print("AT+SEND=");
+    Serial.print(packet);
+    Serial.print("\r\n");
 
     if(!readGateway(1000)){
         return false;
     }
 
-    Serial1.flush();
+    Serial.flush();
     delay(100);
     return true;
 }
@@ -165,9 +163,9 @@ bool Ubidots::readGateway(int delay_gateway){
     bool result = true;
     char* _gatewayAnswer = (char *) malloc(sizeof(char) * ANSWERLENGTH);
     for (uint8_t i = 0; i < 2; i++){
-        while(Serial1.available() > 0){
+        while(Serial.available() > 0){
             if (_index < ANSWERLENGTH - 1){
-                _gatewayAnswer[_index++] = (char)Serial1.read();
+                _gatewayAnswer[_index++] = (char)Serial.read();
                 _gatewayAnswer[_index] = '\0';
             }
         }
@@ -187,20 +185,18 @@ bool Ubidots::readGateway(int delay_gateway){
  */
 
 bool Ubidots::checkConnection(){
-    Serial1.print("AT+NJS");
-    Serial1.print("\r\n");
+    Serial.print("AT+NJS");
+    Serial.print("\r\n");
     delay(100);
 
     char* _gatewayAnswer = (char *) malloc(sizeof(char) * ANSWERLENGTH);
-    while(Serial1.available() > 0){
+    while(Serial.available() > 0){
         if (_index < ANSWERLENGTH - 1){
-            _gatewayAnswer[_index++] = (char)Serial1.read();
+            _gatewayAnswer[_index++] = (char)Serial.read();
             _gatewayAnswer[_index] = '\0';
         }
     }
     _index = 0;
-    Serial.println("answer: ");
-    Serial.println(_gatewayAnswer);
 
     if (strstr(_gatewayAnswer, "0") != NULL){
         free(_gatewayAnswer);
