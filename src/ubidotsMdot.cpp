@@ -16,7 +16,7 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-Made by Mateo Velez - Jose Garcia for Ubidots Inc
+Made by Jose Garcia for Ubidots Inc
 
 Maintainers: Jose Garcia <jose.garcia@ubidots.com>
              Maria Hernandez <maria@ubidots.com>
@@ -87,9 +87,10 @@ bool Ubidots::loraConnect(uint8_t band) {
  */
 
 void Ubidots::add(float value, uint8_t length, uint8_t accuracy) {
-    _currentValue++;
-    dtostrf(value, length, accuracy, (_val + _currentValue)->varValue);
-    Serial.println((_val + _currentValue)->varValue);
+    if (_currentValue < 3){
+        _currentValue++;
+        dtostrf(value, length, accuracy, (_val + _currentValue)->varValue);
+    }
 }
 
 /**
@@ -114,7 +115,6 @@ char* Ubidots::populatePacket() {
             sprintf(_packet, "%s,%s", _packet, (_val + i)->varValue);
         }
     }
-    Serial.println(_packet);
     _currentValue = 0;
     return _packet;
 }
@@ -122,8 +122,6 @@ char* Ubidots::populatePacket() {
 bool Ubidots::sendAll(){
     bool connected = checkConnection();
     char* packet = populatePacket();
-    Serial.print("packet build: ");
-    Serial.println(packet);
     if (strstr(packet, "ERROR") != NULL || strlen(packet) > PACKETSIZE){
         return false;  // Could not populate the array or max bytes size exceed
     }
