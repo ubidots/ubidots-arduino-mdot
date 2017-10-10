@@ -97,13 +97,10 @@ void Ubidots::add(float value, uint8_t length, uint8_t accuracy) {
  * Send all data of all variables that you saved
  * @return true upon success, false upon error.
  */
-char* Ubidots::populatePacket() {
-    char* _packet = (char *) malloc(sizeof(char) * PACKETSIZE);
-
+void Ubidots::populatePacket(char* _packet) {
     if (_currentValue > _maxValues) {
         _currentValue = 0;
         sprintf(_packet, "ERROR");
-        return _packet;
     }
 
     sprintf(_packet, "");
@@ -116,36 +113,39 @@ char* Ubidots::populatePacket() {
         }
     }
     _currentValue = 0;
-    return _packet;
 }
 
 bool Ubidots::sendAll(){
     bool connected = checkConnection();
-    char* packet = populatePacket();
-    if (strstr(packet, "ERROR") != NULL || strlen(packet) > PACKETSIZE){
+    char* _packet = (char *) malloc(sizeof(char) * PACKETSIZE);
+    populatePacket(_packet);
+    if (strstr(_packet, "ERROR") != NULL || strlen(_packet) > PACKETSIZE){
+        free(_packet);
         return false;  // Could not populate the array or max bytes size exceed
     }
 
-    int timeout = 0;
-    while (!connected && timeout < 5){
-        loraConnect(_band);  //Attempts to connect
+    while (!connected){
         connected = checkConnection();
-        timeout++;
+        loraConnect(_band);  //Attempts to connect
+        delay(1000);
     }
 
     if (!connected){
+        free(_packet);
         return false;  // The device is not connected
     }
 
     Serial.print("AT+SEND=");
-    Serial.print(packet);
+    Serial.print(_packet);
     Serial.print("\r\n");
 
     if(!readGateway(1000)){
+        free(_packet);
         return false;
     }
 
     Serial.flush();
+    free(_packet);
     delay(100);
     return true;
 }
@@ -158,8 +158,10 @@ bool Ubidots::sendAll(){
  */
 
 bool Ubidots::readGateway(int delay_gateway){
-    bool result = true;
     char* _gatewayAnswer = (char *) malloc(sizeof(char) * ANSWERLENGTH);
+
+    // Reads the answer twice, as mDot sends in two different response if
+    // Join was sucessfull or not
     for (uint8_t i = 0; i < 2; i++){
         while(Serial.available() > 0){
             if (_index < ANSWERLENGTH - 1){
@@ -170,12 +172,13 @@ bool Ubidots::readGateway(int delay_gateway){
         _index = 0;
 
         if (strstr(_gatewayAnswer, "ERROR") != NULL){
-            result = false;
+            return false;
         }
         delay(delay_gateway);
     }
+
     free(_gatewayAnswer);
-    return result;
+    return true;
 }
 
 /**
@@ -187,7 +190,7 @@ bool Ubidots::checkConnection(){
     Serial.print("\r\n");
     delay(100);
 
-    char* _gatewayAnswer = (char *) malloc(sizeof(char) * ANSWERLENGTH);
+    char* _gatewayAnswer = (char *) malloc(sizeof(char) * ANSWERLENGTH+100);
     while(Serial.available() > 0){
         if (_index < ANSWERLENGTH - 1){
             _gatewayAnswer[_index++] = (char)Serial.read();

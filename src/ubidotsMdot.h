@@ -53,13 +53,12 @@ class Ubidots {
  public:
     void add(float value, uint8_t length = 4, uint8_t accuracy = 2);
     bool sendAll();
-
     Ubidots(const char * ssid, const char * pass, uint8_t band = 1);
 
  private:
     bool loraConnect(uint8_t band);
     bool readGateway(int delay_gateway = 200);
-    char* populatePacket();
+    void populatePacket(char* _packet);
     bool checkConnection();
 
     const char * _ssid;
